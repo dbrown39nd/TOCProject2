@@ -6,24 +6,33 @@ class Tape:
         self.input = input
         self.length = len(input)
         self.head = 0 # initialize head to start
-        
+
         self.alphabet = set("*")
         for let in input:
             if let not in self.alphabet:
                 self.alphabet.add(let)
+
+    def update_tape(self, char):
+        self.input[self.head] = char
         
-    
+    def get_head(self):
+        return self.input[self.head]
     
     def move_tape(self, dir: str):
         if dir == "L":
-            self.head -= 1
+            if self.head > 0: 
+                self.head -= 1
         if dir == "R":
             self.head += 1
+            if self.head >= self.length:
+                self.input.append("_")
         if dir == "S":
             self.head == self.head # Do nothing
+            
+            
 
     
-    def __str__(self):
+    def toString(self):
         # First line: the tape contents
         
         tape_str = self.name + ": " + str(self.input) + '\n'

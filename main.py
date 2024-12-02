@@ -7,29 +7,44 @@ import csv
 
 def parse_transition(transition_str: str) -> list:
     
-    content = transition_str.strip('[]').split(',')
-    content = [item.strip() for item in content]
+    transition_str = transition_str[1:-1].strip()
+    transition_str = transition_str.replace(' ', '')
     
-    result = []
-    current_sublist = []
-    in_sublist = False
+    output = [] 
+    s = ""
+    s_list = []
+    in_list = False
+    skip = False
+    for index, char in enumerate(transition_str):
+        if skip:
+            skip = False
+            continue
+        if not in_list:
+            if char != ",":
+                s += char
+            if char == ",":
+                output.append(s)
+                s = "" # reset temp var
+                continue
+        
+        if char == "[":
+           in_list = True
+           continue
+        if char == "]":
+           in_list = False
+           output.append(s_list)
+           s_list = []
+           s = ""
+           skip = True
+           continue
+       
+        if in_list:
+            if char == ",": continue
+            s_list.append(char)
+
+        
     
-    for item in content:
-        if '[' in item:
-            in_sublist = True
-            current_sublist = [item.strip('[ ')]
-        elif ']' in item:
-            current_sublist.append(item.strip(' ]'))
-            result.append(current_sublist)
-            current_sublist = []
-            in_sublist = False
-        elif in_sublist:
-            current_sublist.append(item)
-        else:
-            result.append(item)
-            
-    return result
-    
+    return output
 
 def parse_input(input_file) -> bool:
     """ 
@@ -49,31 +64,33 @@ def parse_input(input_file) -> bool:
                num_tapes = int(line[-1]) # Reset num_tapes
                machine_name=line[0] # Reset Machine Name
                delta = [] # Reset delta
-               print(f'Machine Name: {machine_name} Number of Tapes: {num_tapes}')
                for i in range(num_tapes):
                    line = f.readline().strip().strip("[]").split(',') #convert to list
                    tapes.append(Tape(line, f"T{i+1}"))
                    index += 1 
             else:
+
                 delta.append(parse_transition(line))
     
     
-    
-    for tape in tapes:
-        print(tape)
-        
-    for t in delta:
-        print(t)
         
     # Create a TuringMachine object and return that. 
-    return tapes, delta
+    tm = TuringMachine(name=machine_name, tapes=tapes, delta=delta, qstart="q0", qaccept="qaccept", qreject="qreject")
+    
+    return tm
                
 
 
 
 def main(input_file: str) -> bool:
     
-    parse_input(input_file=input_file)
+    tm = parse_input(input_file=input_file)
+    tm.execute()
+    print(tm)
+    tm.execute()
+    print(tm)
+    tm.execute()
+    print(tm)
     return True
 
 
@@ -81,8 +98,8 @@ if __name__=="__main__":
     """ May need to change it to have the user enter the input string from the command line. Maybe not though, seems less efficient."""
     args = sys.argv[1:]
     if len(args) != 2: 
-        print("Usage: ./main.py -f input.txt")
-    if(args[0] == "-f"):
+        print("Usage: ./main.py -i input.csv")
+    if(args[0] == "-i"):
         main(args[1])
         
     
