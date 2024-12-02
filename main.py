@@ -85,12 +85,8 @@ def parse_input(input_file) -> bool:
 def main(input_file: str) -> bool:
     
     tm = parse_input(input_file=input_file)
-    tm.execute()
-    print(tm)
-    tm.execute()
-    print(tm)
-    tm.execute()
-    print(tm)
+    status = tm.execute(max_iterations=100)
+
     return True
 
 
@@ -101,6 +97,9 @@ if __name__=="__main__":
         print("Usage: ./main.py -i input.csv")
     if(args[0] == "-i"):
         main(args[1])
+    else:
+        print("Usage: ./main.py -i input.csv")
+        sys.exit(1)
         
     
     
