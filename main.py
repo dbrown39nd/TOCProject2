@@ -5,22 +5,47 @@ import sys
 import csv
 
 
+def parse_transition(transition_str: str) -> list:
+    
+    content = transition_str.strip('[]').split(',')
+    content = [item.strip() for item in content]
+    
+    result = []
+    current_sublist = []
+    in_sublist = False
+    
+    for item in content:
+        if '[' in item:
+            in_sublist = True
+            current_sublist = [item.strip('[ ')]
+        elif ']' in item:
+            current_sublist.append(item.strip(' ]'))
+            result.append(current_sublist)
+            current_sublist = []
+            in_sublist = False
+        elif in_sublist:
+            current_sublist.append(item)
+        else:
+            result.append(item)
+            
+    return result
+    
 
 def parse_input(input_file) -> bool:
     """ 
     Takes in the input file and yields a list of tapes and a list for the transition function. 
     
     """
+    
     num_tapes = 0
     machine_name = "" 
     tapes = [] # list of Tape Objects
     delta = [] 
     with open(input_file, "r") as f :
-        
        for index, line in enumerate(f):
             line = line.strip()
             if index == 0: #first line
-               line = line.split(',')
+               line = line.strip("[]").split(',')
                num_tapes = int(line[-1]) # Reset num_tapes
                machine_name=line[0] # Reset Machine Name
                delta = [] # Reset delta
@@ -30,10 +55,17 @@ def parse_input(input_file) -> bool:
                    tapes.append(Tape(line, f"T{i+1}"))
                    index += 1 
             else:
-                print(line)
+                delta.append(parse_transition(line))
+    
+    
     
     for tape in tapes:
         print(tape)
+        
+    for t in delta:
+        print(t)
+        
+    # Create a TuringMachine object and return that. 
     return tapes, delta
                
 
