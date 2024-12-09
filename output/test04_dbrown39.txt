@@ -1,5 +1,5 @@
-Machine: "Palindrome Checker"
-Number of Tapes: 2
+Machine: "Four Copy Checker"
+Number of Tapes: 4
 Start State: q0
 Accept State: qaccept
 Reject State: qreject
