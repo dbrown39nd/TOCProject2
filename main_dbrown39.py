@@ -48,7 +48,7 @@ def parse_transition(transition_str: str) -> list:
             s_list.append(char)
 
         
-    
+
     return output
 
 def parse_input(input_file: str, output_file: str) -> bool:
@@ -81,7 +81,6 @@ def parse_input(input_file: str, output_file: str) -> bool:
         
     # Create a TuringMachine object and return that. 
     tm = TuringMachine(name=machine_name, tapes=tapes, delta=delta, qstart="q0", qaccept="qaccept", qreject="qreject", output_file=output_file)
-    
     return tm
                
 

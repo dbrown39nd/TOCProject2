@@ -1,5 +1,3 @@
-
-
 class Tape:
     def __init__(self, input: list, name: str):
         self.name = name # eg: T1, T2...

@@ -39,16 +39,21 @@ class TuringMachine():
                 f.write(f"Accept State: {self.qaccept}\n")
                 f.write(f"Reject State: {self.qreject}\n")
                 f.write("\n")
+                
+
+            self._format_output()  # print initial configuration
         
         if self.iterations >= max_iterations:
             return "Reject"
             
         inputs = [tape.get_head() for tape in self.tapes]
 
-        
         for transition in self.delta:
             if transition[0] == self.current_state and self._check_input(transition[1], inputs):
                 self._take_transition(transition)
+                
+
+                self._format_output(transition)  # pritn the transition and new configuration
                 
                 if self.current_state == self.qaccept:
                     return "Accept"

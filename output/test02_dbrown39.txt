@@ -1,6 +1,32 @@
-Machine: "Palindrome Checker"
+Machine: "Palindrome Checker: w#w^R"
 Number of Tapes: 2
 Start State: q0
 Accept State: qaccept
 Reject State: qreject
+
++-------------------------T0-------------------------+
+Current State: q0
+T1: ['1', '0', '1', '#', '1', '0', '1']
+      ^
+T2: ['1', '1', '1', '#', '1', '0', '1']
+      ^
+
++-------------------------T1-------------------------+
+Current State: q0
+T1: ['1', '0', '1', '#', '1', '0', '1']
+           ^
+T2: ['1', '1', '1', '#', '1', '0', '1']
+           ^
+Transition: ['q0', ['1', '1'], 'q0', ['1', '1'], ['R', 'R']]
+New State: q0
+
++-------------------------T2-------------------------+
+Current State: qreject
+T1: ['1', '0', '1', '#', '1', '0', '1']
+           ^
+T2: ['1', '1', '1', '#', '1', '0', '1']
+           ^
+Transition: ['q0', ['0', '1'], 'qreject', ['0', '1'], ['S', 'S']]
+New State: qreject
+Reject!
 
