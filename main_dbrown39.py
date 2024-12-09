@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
-from src.tape import Tape
-from src.TuringMachine import TuringMachine
-import sys 
+from src.tape_dbrown39 import Tape
+from src.TuringMachine_dbrown39 import TuringMachine
+import os 
 import csv
+import json
+
+#GLOBALS:
+PASS_COUNT = 0
+FAIL_COUNT = 0
 
 
 def parse_transition(transition_str: str) -> list:
@@ -46,7 +51,7 @@ def parse_transition(transition_str: str) -> list:
     
     return output
 
-def parse_input(input_file) -> bool:
+def parse_input(input_file: str, output_file: str) -> bool:
     """ 
     Takes in the input file and yields a list of tapes and a list for the transition function. 
     
@@ -71,11 +76,11 @@ def parse_input(input_file) -> bool:
             else:
 
                 delta.append(parse_transition(line))
-    
+                
     
         
     # Create a TuringMachine object and return that. 
-    tm = TuringMachine(name=machine_name, tapes=tapes, delta=delta, qstart="q0", qaccept="qaccept", qreject="qreject")
+    tm = TuringMachine(name=machine_name, tapes=tapes, delta=delta, qstart="q0", qaccept="qaccept", qreject="qreject", output_file=output_file)
     
     return tm
                
@@ -83,23 +88,37 @@ def parse_input(input_file) -> bool:
 
 
 def main(input_file: str) -> bool:
+    global PASS_COUNT
+    global FAIL_COUNT
     
-    tm = parse_input(input_file=input_file)
-    status = tm.execute(max_iterations=100)
-
-    return True
+    test_num = input_file.split('/')[-1].split('.')[0].split('_')[0]
+    tm = parse_input(input_file=input_file, output_file=f"output/{test_num}_dbrown39.txt")
+    result = tm.execute(max_iterations=100)
+    with open("check_dbrown39.json", "r") as f:
+        check = json.load(f)
+    
+    # check the result to verify if it's correct 
+    if result.lower() == check[test_num]:
+        print(f"{test_num} passed!")
+        PASS_COUNT += 1
+    else:
+        print(f"{test_num} failed")
+        FAIL_COUNT += 1
+    
+    
 
 
 if __name__=="__main__":
-    """ May need to change it to have the user enter the input string from the command line. Maybe not though, seems less efficient."""
-    args = sys.argv[1:]
-    if len(args) != 2: 
-        print("Usage: ./main.py -i input.csv")
-    if(args[0] == "-i"):
-        main(args[1])
+    
+    INPUT_PATH = "input"
+
+    for file in sorted(os.listdir(INPUT_PATH)): #run in order
+        if file.endswith(".csv"):
+            print("="*2 + f"{file}" + "="*2)
+            main(input_file=f"{INPUT_PATH}/{file}")
+            print()
+    
+    if FAIL_COUNT == 0:
+        print(f"{PASS_COUNT}/{PASS_COUNT} tests passed!")
     else:
-        print("Usage: ./main.py -i input.csv")
-        sys.exit(1)
-        
-    
-    
+        print(f"{FAIL_COUNT}/{FAIL_COUNT + PASS_COUNT} tests failed.")
