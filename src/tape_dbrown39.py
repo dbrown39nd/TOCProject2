@@ -2,7 +2,7 @@
 
 class Tape:
     def __init__(self, input: list, name: str):
-        self.name = name # eg: t1, t2...
+        self.name = name # eg: T1, T2...
         self.input = input
         self.length = len(input)
         self.head = 0 # initialize head to start
@@ -20,15 +20,20 @@ class Tape:
     
     def move_tape(self, dir: str):
         if dir == "L":
-            if self.head > 0: 
+            if self.head > 0:
                 self.head -= 1
+                return True
+            # Don't move the head if it's already at the leftmost position
+            return False
         if dir == "R":
             self.head += 1
             if self.head >= self.length:
                 self.input.append("_")
+                self.length += 1
+            return True
         if dir == "S":
-            self.head == self.head # Do nothing
-            
+            return True
+        return False
             
 
     

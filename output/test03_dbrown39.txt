@@ -1,0 +1,6 @@
+Machine: "Palindrome Checker"
+Number of Tapes: 2
+Start State: q0
+Accept State: qaccept
+Reject State: qreject
+
